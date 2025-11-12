@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        PYTHON = 'C:\Users\majid\AppData\Local\Programs\Python\Python314\python.exe' // ganti sesuai path Python di mesin
+        PYTHON = 'C:\\Users\\majid\\AppData\\Local\\Programs\\Python\\Python314\\python.exe'
+ // ganti sesuai path Python di mesin
     }
 
     stages {
