@@ -1,44 +1,50 @@
 pipeline {
     agent any
 
-    stage('Checkout') {
-    steps {
-        git branch: 'main',
-            url: 'https://github.com/majidpro123/perpustakaan_testing.git',
-            credentialsId: 'github-token'
+    environment {
+        PYTHON = 'python'
     }
-}
 
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/majidpro123/perpustakaan_testing.git',
+                    credentialsId: 'github-token'
+            }
+        }
 
         stage('Setup Python') {
             steps {
-                // Install Python dan dependencies
+                echo 'Menyiapkan environment Python...'
                 bat '''
                     python -m venv venv
                     call venv\\Scripts\\activate
                     pip install --upgrade pip
-                    pip install -r requirements.txt
+                    pip install pytest
                 '''
             }
         }
 
         stage('Run Unit Tests') {
             steps {
+                echo 'Menjalankan pytest...'
                 bat '''
                     call venv\\Scripts\\activate
-                    pytest --maxfail=1 --disable-warnings -v
+                    pytest --junitxml=report.xml
                 '''
+            }
+            post {
+                always {
+                    junit 'report.xml'
+                }
             }
         }
     }
 
     post {
-        always {
-            junit '**/test-results.xml'
-            echo 'Pipeline selesai dijalankan!'
-        }
         success {
-            echo '✅ Semua test lulus!'
+            echo '✅ Semua unit test berhasil!'
         }
         failure {
             echo '❌ Ada test yang gagal!'
