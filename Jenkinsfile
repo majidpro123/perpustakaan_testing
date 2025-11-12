@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PYTHON = 'python'
+        PYTHON = 'C:\Users\majid\AppData\Local\Programs\Python\Python314\python.exe' // ganti sesuai path Python di mesin
     }
 
     stages {
@@ -17,22 +17,22 @@ pipeline {
         stage('Setup Python') {
             steps {
                 echo 'Menyiapkan environment Python...'
-                bat '''
-                    python -m venv venv
+                bat """
+                    %PYTHON% -m venv venv
                     call venv\\Scripts\\activate
                     pip install --upgrade pip
-                    pip install pytest
-                '''
+                    pip install -r requirements.txt
+                """
             }
         }
 
         stage('Run Unit Tests') {
             steps {
                 echo 'Menjalankan pytest...'
-                bat '''
+                bat """
                     call venv\\Scripts\\activate
                     pytest --junitxml=report.xml
-                '''
+                """
             }
             post {
                 always {
