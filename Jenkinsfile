@@ -1,13 +1,14 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                // Clone repo dari GitHub
-                git branch: 'main', url: 'https://github.com/majidpro120/perpustakaan_testing.git'
-            }
-        }
+    stage('Checkout') {
+    steps {
+        git branch: 'main',
+            url: 'https://github.com/majidpro123/perpustakaan_testing.git',
+            credentialsId: 'github-token'
+    }
+}
+
 
         stage('Setup Python') {
             steps {
